@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html manifest="lawLibraryReader.appcache">
+    <head>
+        <title>My App</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+        <link rel="stylesheet" href="style/app.min.css">
+        <link rel="stylesheet" href="style/custom.css">
+        <link rel="stylesheet" href="style/base.css"></link>
+    </head>
+
+    <body>
+        <div id="page-home" class="app-page" data-page="home">
+            
+            <div class="list-cont js-list-cont">
+                <div class="app-topbar blue">
+                    <div class="app-button app-button-icon left button-menu js-btn-menu">&nbsp;&nbsp;</div>
+                    <div class="app-title">法律文库</div>
+                    <div class="app-button app-button-icon right button-download js-btn-download">&nbsp;</div>
+                    <div class="app-button app-button-icon right button-search js-btn-search">&nbsp;</div>
+                    <div class="form-search js-form-search" action="" style="display:none;">
+                        <div class="cont-input-search">
+                            <input class="app-input js-ipt-search" type="search" placeholder="请输入关键字">
+                            <input type="submit" style="display:none">
+                        </div>
+                        <div class="app-button right button-confirm-search js-btn-confirm-search">
+                            <span>搜索</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <ul class="app-list js-aritcle-list">
+                    </ul>
+                    <div class="div-loading js-loading" align="center">
+                        <!-- <img src="images/loading.gif" alt="loading" class="img-loading"> -->
+                    </div>
+                </div>
+
+                <div class="mask js-mask" style="display:none;"></div>
+                <div class="process-bar js-process-bar" style="display:none;">
+                    <div class="process-bar-inner js-process-bar-inner"></div>
+                    <div class="process-bar-text js-process-bar-text">正在离线下载：0%</div>
+                </div>
+            </div>
+            <div class="menu" data-scrollable>
+                <div class="">
+                    <ul class="app-list js-category-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-search" class="app-page" data-page="search">
+            <div class="list-cont js-list-cont">
+                <div class="app-topbar blue">
+                    <div class="app-button app-button-icon button-back left" data-back></div>
+                    <div class="app-title">搜索结果</div>
+                    <div class="form-search js-form-search" action="">
+                        <div class="cont-input-search">
+                            <input class="app-input js-ipt-search" type="search" placeholder="请输入关键字">
+                            <input type="submit" style="display:none">
+                        </div>
+                        <div class="app-button right button-confirm-search js-btn-confirm-search">
+                            <span>搜索</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-content">
+                        <ul class="app-list js-aritcle-list">
+                        </ul>
+                        <div class="div-loading js-loading" align="center">
+                            <img src="images/loading.gif" alt="loading" class="img-loading">
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-detail" class="app-page" data-page="detail">
+            <div class="app-topbar blue">
+                <div class="app-button app-button-icon button-back left" data-back></div>
+                <div class="app-title"></div>
+            </div>
+            <div class="app-content">
+            </div>
+        </div>
+        <script>
+            window.MSA = {};
+        </script>
+        <!--jsmerge:begin:lib.js-->
+<script src="dist/lib.js"></script>
+<!--jsmerge:end:lib.js-->
+
+        <!--jsmerge:begin:lawnchair.js-->
+<script src="dist/lawnchair.js"></script>
+<!--jsmerge:end:lawnchair.js-->
+        
+        <!--jsmerge:begin:app.js-->
+<script src="dist/app.js"></script>
+<!--jsmerge:end:app.js-->
+
+        <script type="text/javascript">
+            try {
+                App.restore();
+            } catch (err) {
+                App.load('home');
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,266 @@
+/*
+	全局
+ */
+.app-ios-7 .app-topbar .app-title {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.app-topbar.blue {
+	background-color: #2089e4;
+}
+
+.app-list>li {
+	height: 44px;
+}
+
+.app-content .app-list>li {
+	background-color: #f2f2f2;
+	background-image: url('../images/go-detail-icon.png');
+	background-repeat:no-repeat;
+	background-position: right center;
+	background-size: 27px 55px;
+	color: #000;
+	font-size: 16px;
+	border-top: 1px solid #ddd;
+	height: 55px;
+	padding-top: 14px;
+	padding-bottom: 12px;
+	padding-right: 40px;
+}
+
+.app-topbar .app-button-icon {
+	padding: 0;
+	width: 44px;
+}
+
+.app-topbar .app-title {
+	width: auto;
+	padding: 0 88px;
+}
+
+.app-topbar.detail-topbar .app-title {
+	padding: 0 44px;
+}
+/*
+.app-topbar .button-back {
+
+}*/
+
+.app-topbar .app-button[data-back].left {
+	padding: 0;
+	width: 44px;
+	height: 44px;
+	background-image: url('../images/btn-back-bg.png');
+	background-repeat: no-repeat;
+	background-position: 0px center;
+	background-size: 44px;
+}
+
+/*
+	详情页
+ */
+.app-content .app-list .doc-title {
+	line-height: 16px;
+	height: 16px;
+	text-overflow: ellipsis;
+	overflow: hidden;;
+}
+
+.app-content .app-list .doc-date {
+	line-height: 11px;
+	font-size: 11px;
+	padding-top: 4px;
+	color: #999;
+}
+
+.app-topbar .app-button.button-search {
+    background-image:url('../images/btn-search-bg.png');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: 44px;
+}
+.app-topbar .app-button.button-download {
+    background-image:url('../images/btn-download-bg.png');
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    background-size: 44px;
+    right: 54px;
+}
+
+.app-topbar .app-button.button-confirm-search {
+    padding: 0 2px;
+    width: 70px;
+}
+
+.button-confirm-search span {
+	padding: 8px 8px 8px 20px;
+	border-radius: 4px;
+	color: #4486f0;
+}
+
+.button-search.selected {
+    background-color: #3366cc;
+}
+
+.app-topbar .app-button.button-menu {
+	background-image: url('../images/btn-menu-bg.png');
+	background-repeat: no-repeat;
+	background-position: 0px center;
+	background-size: 44px;
+}
+
+.list-cont {
+	position: relative;
+	transition: 0.5s left;
+}
+
+.move-left {
+	left: 240px;
+}
+
+.menu {
+	height: 100%;
+	width: 240px;
+	position: absolute;
+	left: 0;
+	top:0;
+	overflow-y:auto;
+}
+
+.button-menu {
+	padding-left: 40px;
+}
+
+.form-search {
+	position: relative;
+	left: 0;
+	top: 0;
+	color: #444;
+	padding-right: 70px;
+	background-color: white;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form-search input.app-input{
+	border-bottom: none;
+}
+
+/*loading*/
+.div-loading {
+	width: 100%;
+	height: 44px;
+}
+
+.img-loading {
+	height: 16px;
+	width: 16px;
+	margin: 14px auto;
+}
+
+/*遮罩*/
+.mask {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.5;
+	z-index: 3001;
+}
+
+/*进度条*/
+.process-bar {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	height: 20px;
+	width: 100%;
+	background-color: #000;
+	overflow: hidden;
+	z-index: 3002;
+	background-image: ('../images/process-bar-bg.png');
+	background-repeat: repeat-x;
+	background-size: 100% 20px;
+}
+
+.process-bar-inner {
+	width: 0%;
+	height: 100%;
+	background-color: #4486f0;
+}
+
+.process-bar-text {
+	position: absolute;
+	left: 0;
+	top: 0;
+	color: #fff;
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	font-weight: bold;
+}
+
+/*侧边导航*/
+.menu-item {
+	background-color: #ffffff;
+}
+
+.menu-item.selected {
+	background-color: #b5d9f8;
+}
+
+.app-list li.menu-title {
+	text-align: center;
+	color: #2089e4;
+	padding-left: 0px;	
+	padding-right: 0px;
+}
+
+.app-list li.menu-item {
+	font-size: 18px;
+}
+
+.app-topbar .app-button[data-back].left {
+	padding: 0;
+	width: 44px;
+	height: 44px;
+}
+
+/*搜索框*/
+.app-input[type="search"] {
+	padding: 8px;
+	background-image: none;
+}
+
+.form-search input.app-input{
+	height: 34px;
+	background-color: #f8f8f8;
+	border: 1px solid #d0d0d0;
+	border-radius: 3px;
+}
+
+.cont-input-search {
+	padding: 5px 5px 5px 18px;
+}
+
+
+/*
+	详情页
+ */
+#page-detail .app-content{
+	padding: 16px 16px 0;
+}
+
+#page-detail .app-content p {
+	font-size: 16px;
+	line-height: 28px;
+}
+
+#page-detail .doc-date {
+	text-align: center;
+	margin-bottom: 16px;
+	font-size: 12px;
+	color: #999;
+}

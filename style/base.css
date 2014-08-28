@@ -1,0 +1,10 @@
+.button-search {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACjElEQ…BN3Eb7/8yva2LSSH4XsbVKbm5413AeCePamhYRRYv52z/AKK4/BRObOQAAAABJRU5ErkJggg==);
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    -webkit-background-size: 16px 16px;
+    background-size: 16px 16px;
+
+    height: 16px;
+    width: 16px;
+}
