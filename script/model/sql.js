@@ -3,69 +3,10 @@
  */
 
 (function(exports,$){
-    var PAGESIZE = 20,
-    	gIsDirty = false;
-    	// 是否需要更新
-    var flag = new Lawnchair({name:'tb_flag'}, function(store) { });
-    // creat a new db
-    var store = new Lawnchair({name:'tb_categories'}, function(store) {
-        // 预加载 文档分类数据；
-        // 保存
-        // fetchCategorys(function(_res){
-        //  store.save(_res);
-        // });
-        
-    });
-    var documentStore = new Lawnchair({name:'tb_documents'}, function(store) {});
-    var detailStore = new Lawnchair({name:'tb_docu_details'}, function(store) {});
-
-    // get category list
-    function fetchCategorys(_callback){
-        $.ajax({
-            url:'http://www.nbmsa.gov.cn/api/law_documents/categories/',
-            success : function(_result){
-            	var documentCount = 0;
-            	var mix = function(_val){
-            		documentCount += _val.docs_amount;
-            		return {
-                		name : _val.name,
-                		id : _val.id,
-                		docs_amount : _val.docs_amount,
-                		children : []
-                	};
-            	};
-            	var newlist = [];
-            	$.each(_result,function( _index, _val,_this){
-                	newlist.push(mix(_val));
-					// 将多级的数据改为一级
-                	$.each(_val.children,function(_index2, _item2){
-                		newlist.push(mix(_item2));
-                		// Max depth is level2
-                	});
-                });
-                var me = {key:'categories',data: newlist};
-                _callback(me);
-                //
-                //TODO strip unused properties
-                store.save(me);
-                //check dirty
-                flag.get('total',function(_res){
-                	// not reliable
-                	if(_res && _res.data.total!= documentCount){
-                		gIsDirty = true;
-                	}
-                	//
-	                flag.save({
-	                	key:'total',
-	                	data :{
-	                		time : new Date().getTime(),
-	                		total : newlist.length
-	                	}
-	                });
-                });
-            }
-        });
-    }
+    var PAGESIZE = 20;
+    var CATEGORY_URL = window.MSA.apiDomain + '/api/news/category/';
+    var DOCUMENTS_URL = window.MSA.apiDomain + '/api/news/entries/category/';
+    var DOCUMENT_URL = window.MSA.apiDomain + '/api/news/entry/';
     // get documents list of one category
     function fetchDocuments(_param, _callback){
         var data = {
@@ -73,178 +14,79 @@
             cat : _param.cat,
             num : parseInt(_param.num,10) || PAGESIZE
         };
-        
-        //no hit
-        $.getJSON('http://www.nbmsa.gov.cn/api/law_documents/documents/',data,function(_res){
-            var ley = 'documents'+data.cat;
-            var mixed = $.map(_res,function(_val, _index, _this){
-	                	return {
-	                		id : _val.id,
-	                		title : _val.title,
-	                		category : _val.category
-	                	}
-	                });
-            _callback({key:ley,data:mixed});
-            //
-            documentStore.get(ley,function(older){
-                //
-                if(older && older.data){
-                    var newer = older;
-                }else{
-                    var newer = {key:ley,data:[]};
-                }
-                for(var i= 0, l = mixed.length; i<l; i++){
-                    var artice = mixed[i];
-                    newer.data[data.start+i] = artice;
-                }
-                try{
-                    //TODO strip unused properties
-                    documentStore.save(newer);
-                }catch(e){
-                    alert('数据离线失败');
-                }
-                
-            })
-        });
-            
-        
-    }
-    // search
-    function searchDocuments(_param, _callback){
-        var data = {
-            start : parseInt(_param.start,10) || 0,
-            num : parseInt(_param.num,10) || PAGESIZE
-        };
-        if(_param.keyword){
-            data.keyword = _param.keyword;
-        }
-        $.getJSON(
-            'http://www.nbmsa.gov.cn/api/law_documents/search/',
-            data,
-            function(_res){
-                _callback(_res);
-            }
-        );
-        //TODO  search in cache
-    };
 
-    function offlineSearch(_param, _callback){
-    	var data = {
-            start : parseInt(_param.start,10) || 0,
-            num : parseInt(_param.num,10) || PAGESIZE
-        };
-        if(_param.keyword){
-            data.keyword = _param.keyword;
-        }
-        //
-        var def = $.Deferred(),
-        	outs = [];
-        store.get('categories',function(_res){
-        	var lst = _res.data;
-        	var starter = 0 ;
-        	for (var i = lst.length - 1; i >= 0; i--) {
-                var category = lst[i];
-                // var maxLoop += category.docs_amount;
-        		var ley = 'documents'+category.id;
-                !function(i){
-            		documentStore.get(ley,function(_res2){
-                        if(_res2){
-                            var lst = _res2.data;
-                            for (var j = lst.length - 1; j >= 0; j--) {
-                                var item = lst[j];
-                    			if(item.title.indexOf(data.keyword)>-1){
-                    				outs.push(item);
-                                    // console.log(item);
-                    			}
-                    			starter++;
-                    			if(i == 0 && j==0){
-                    				def.resolve(outs.slice(data.start, data.start + data.num));
-                    			}
-                            };
-                        }
-            		})
-                }(i)
-        	};
-        })
-        return def;
-    }
-    function getHTMLById(_id, _callback){
-        
-        $.getJSON(
-            'http://www.nbmsa.gov.cn/api/law_documents/document/'+_id+'/',
-            {},
-            function(_res){
-                try{
-                    var val = {
-                        key : ''+_id,
-                        data : _res
-                    };
-                    _callback(val);
-                    //
-                    detailStore.save(val);
-                }catch(e){
-                    alert('数据离线失败');
-                }
-            }
-        );
-    }
-// fetch detail by document id
-    function fetchDetails(_param,_callback){
         $.ajax({
-            url:'http://www.nbmsa.gov.cn/api/law_documents/offline/',
-            data :{
-                start : parseInt(_param.start,10) || 0,
-                num : parseInt(_param.num,10) || 20
-            },
-            success : function(_result){
-                _callback && _callback(_result);
-                //
-                for(var i= 0, l = _result.length; i<l; i++){
-                    try{
-                        var item =_result[i];
-                        detailStore.save({
-                            key : ''+item.id,
-                            data : item
-                        });
-                    }catch(e){
-                        alert('离线保存失败');
-                    }
+            url: DOCUMENTS_URL + _param.cat + '/',
+            data: data,
+            success: function(_res){
+                if(_callback){
+                    _callback(_res);
                 }
             },
             error: function(){
-                _callback && _callback([]);
+                
             }
         });
-    };
+    }
+    function getHTMLById(_id, _callback){
+        $.ajax({
+            url: DOCUMENT_URL + _id + '/',
+            success: function(_res){
+                if(_callback){
+                    _callback(_res);
+                }
+            },
+            error: function(){
+                var data = {
+                    "category": {
+                        "description": "", 
+                        "tags": "", 
+                        "section": 22, 
+                        "created": "2011-01-01 00:00:00", 
+                        "title": "辖区信息", 
+                        "id": 45
+                    }, 
+                    "tags": "", 
+                    "html_content": "<div id=\"entry-html-content\" style=\"margin-top: 20px; min-height: 480px;\">\r\n<p class=\"t2m\">宁波市新江桥便桥及新桥施工栈桥的防撞设施是保障杭甬运河新江桥段水域通航安全的重要手段之一，在工程施工期间，宁波三江口海事处积极发挥专业优势，全力保障该工程施工顺利进行。</p>\r\n<p class=\"t2m\">自6月18日宁波市建委召开该工程建设协调会并确定最终施工方案以来，该处一是提前约谈施工单位，要求落实施工期间安全管理措施。由于施工水域位于甬江通往姚江的弯道口，水文和航道条件较为复杂，该处要求施工单位确定施工船舶进点作业后锚泊定位的水域，不得影响该水域航行的其他船舶。二是强化多家施工单位之间的沟通，考虑到临近水域同时有甬江清淤与桥梁防撞设施施工工程，存在交叉水域，该处召集几家施工作业单位，要求建立施工动态信息通报制度，防止航行船舶与施工作业引起冲突。三是对参与施工作业的船舶实施安全检查，确保施工船舶技术状况符合要求，同时督促参与施工辅助的运输船舶办理进出港签证手续，强化现场巡航检查，密切关注施工作业动态，加强与各施工单位与船舶的联系，确保施工期间水上交通安全。</p>\r\n<p class=\"t2m\">通过各方的共同努力，目前新江桥便桥及新桥栈桥防撞设施完善工程已基本完工。</p>\r\n</div>", 
+                    "start_publication": "2014-08-25 16:57:58", 
+                    "title": "海事部门积极服务宁波新江桥便桥及新桥栈桥防撞设施建成完工", 
+                    "excerpt": "\r\n宁波市新江桥便桥及新桥施工栈桥的防撞设施是保障杭甬运河新江桥段水域通航安全的重要手段之一，在工程施工期间，宁波三江口海事处积极发挥专业优势，全力保障该工程施", 
+                    "last_update": "2014-08-25 16:57:48", 
+                    "source": "三江口海事处", 
+                    "is_top": false, 
+                    "id": 39424, 
+                    "pics": [
+                        "/media/photos/2014/08/25/8014d78a97ffef73087e96c350ea0672_jpg_480x3000_autocrop-True_q85.jpg", 
+                        "/media/photos/2014/08/25/d576a32763c0424125b821cb7621c5bb_jpg_480x3000_autocrop-True_q85.jpg"
+                    ], 
+                    "original": null
+                }
+                if(_callback){
+                    _callback(data);
+                }
+            }
+        });
+    }
+
+    function fetchCategory(_id, _callback){
+        
+        $.ajax({
+            url: CATEGORY_URL + _id + '/',
+            success: function(_result){
+                _callback && _callback(_result);
+            },
+            error: function(){
+                // _callback && _callback([]);
+            }
+        });
+    }
     //
     var sql = {
         getDetailById : function(_id){
             var deferred = $.Deferred();
-
-            detailStore.get(''+_id,function(_res){
-                if(_res && _res.data){// cache hits
-                    deferred.resolve(_res.data);
-                }else{
-                    getHTMLById(_id, function(_result){
-                        deferred.resolve(_result.data);
-                    });
-                }
+            getHTMLById(_id, function(_result){
+                deferred.resolve(_result);
             });
-
-            return deferred;
-        },
-        listCategory : function(){
-            var deferred = $.Deferred();
-
-            store.get('categories',function(_res){
-                if(!navigator.onLine  && _res && _res.data){// cache hits
-                    deferred.resolve(_res.data);
-                }else{
-                    fetchCategorys(function(_result){
-                        deferred.resolve(_result.data);
-                    });
-                }
-            })
 
             return deferred;
         },
@@ -255,154 +97,20 @@
 
             var deferred = $.Deferred();
             var start = _param.start || 0,
-                num = _param.num || PAGESIZE
-            documentStore.get('documents'+_param.cat,function(older){
-                if(older && older.data){
-                    var outs = older.data.slice(start,start+num);
-                    if(outs[0] && outs[num-1]){//cache hits
-                        deferred.resolve(outs);
-                        return;
-                    }
-                }
+                num = _param.num || PAGESIZE;
                 // not hit
-                fetchDocuments(_param,function(_res2){
-                    deferred.resolve(_res2.data);
-                });
+            fetchDocuments(_param,function(_res2){
+                deferred.resolve(_res2);
             });
 
             return deferred;
         },
-        search : function(_param){
-            if(navigator.onLine ){
-                var deferred = $.Deferred();
-	            searchDocuments(_param,function(_res){
-	                if(_res){
-	                    deferred.resolve(_res);
-	                }else{
-	                    deferred.resolve([]);
-	                }
-	            })
-                return deferred;
-        	}else{
-                return offlineSearch(_param);
-        	}
-        },
-        download: function(_param, _callback){
-            var param = _param || {};
-            // var deferred = $.Deferred();
-            var start = param.start || 0,
-                num = param.num || PAGESIZE
-
-            // 强制下载
-            preFetch(function(_res){
-                // deferred.done(_res);
-                if (_callback) {
-                    _callback(_res);
-                };
-            })
-
-            // return deferred;
-
-        }
-    };
-    // 异步请求的排队功能
-    var reqs = [];
-    function queue(_func, _this, _argArray){
-        reqs.push({
-            func : _func,
-            self : _this,
-            args : _argArray
-        });
-    }
-    function next(){
-        var req = reqs.shift();
-        if(req && typeof req.func == 'function'){
-            req.func.apply(req.self,req.args);
-        }
-    }
-
-    var documentTotal = 0;
-    function preFetch(_callback){
-        // download category
-        var categoryMaps = {};
-        sql.listCategory().done(function(_lst){
-            for (var i = _lst.length - 1; i >= 0; i--) {
-                var item = _lst[i];
-                if(item.children.length >0 ){//level 2
-                	$.each(function(_index, _item){
-                		documentTotal += _item.docs_amount;
-	                	categoryMaps[_item.id] = _item.docs_amount;
-                	})
-                }else{
-	                documentTotal += item.docs_amount;
-	                categoryMaps[item.id] = item.docs_amount;
-                }
-            }
-        }).then(preFetchDocuments).done(preFetchDetails);
-
-        function preFetchDocuments(){
+        getCategory: function(_id){
             var deferred = $.Deferred();
-            // download all documents
-            // 列表下载比例占总下载量的20%
-            var downloadNum = 0;
-            for(var i in categoryMaps){
-                if(categoryMaps.hasOwnProperty(i)){
-                    if(categoryMaps[i] != 0){
-                        // add queue;
-                        queue(function(j){
-                            sql.listDocuments({
-                                cat : j,
-                                start :0,
-                                num : categoryMaps[j]
-                            }).done(function(){
-                                downloadNum += categoryMaps[j];
-                                var percent = parseInt(downloadNum * 100 * 0.2 / documentTotal,10);
-                                if (_callback) {
-                                    _callback(percent);
-                                };
+            fetchCategory(_id, function(_result){
+                deferred.resolve(_result);
+            });
 
-                                if (downloadNum >= documentTotal) {
-                                    deferred.resolve();
-                                };
-                                // call next
-                                next()
-                            })
-                        },null,[i]);
-                    }
-                }
-            }
-            // start queue
-            next();
-            return deferred;
-        }
-
-        function preFetchDetails(){
-            var deferred = $.Deferred();
-            // meanwhile download document's detail
-            var downloadNum = 0;
-            var start = 0;
-            for (var start = 0; start < documentTotal; start += PAGESIZE) {
-                // add queue;
-                queue(function(start){
-                    fetchDetails({
-                        start : start,
-                        num : PAGESIZE
-                    }, function(_res){
-                        downloadNum += PAGESIZE;
-                        var percent = parseInt(downloadNum * 100 * 0.8 / documentTotal,10) + 20;
-                        if (_callback) {
-                            _callback(percent);
-                        };
-
-                        if (downloadNum >= documentTotal) {
-                            deferred.resolve();
-                        };
-                        // call next
-                        next()
-                    });
-                },null,[start]);
-            };
-            //
             return deferred;
         }
     };

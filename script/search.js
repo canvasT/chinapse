@@ -3,7 +3,7 @@ window.MSA.Search = MSA.Class({
         this.page = data.page;
         this.keyword = data.data.keyword;
         this.$p = $(this.page);
-        this.$articleListCont = this.$p.find('.js-aritcle-list');
+        this.$articleListCont = this.$p.find('.js-article-list');
         this.$listCont = this.$p.find('.js-list-cont');
         this.$formSearch = this.$p.find('.js-form-search');
         this.$btnConfirmSearch = this.$p.find('.js-btn-confirm-search');
@@ -50,8 +50,8 @@ window.MSA.Search = MSA.Class({
                 that.keyword = keyword;
                 that.startIndex = 0;
                 // that.$articleListCont.html('');
-                that.$articleListCont.after('<ul class="app-list js-aritcle-list"></ul>').remove();
-                that.$articleListCont = that.$p.find('.js-aritcle-list');
+                that.$articleListCont.after('<ul class="app-list js-article-list"></ul>').remove();
+                that.$articleListCont = that.$p.find('.js-article-list');
                 // that.$appContent.scroll();
                 that.loadDocuments();
             }

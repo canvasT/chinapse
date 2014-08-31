@@ -10,19 +10,28 @@
     </head>
 
     <body>
-        <div id="page-home" class="app-page" data-page="home">
+        <div id="page-detail" class="app-page" data-page="detail">
             <div class="app-topbar blue">
+                <a class="app-button left app-button-back js-btn-back"></a>
                 <div class="app-title"></div>
                 <a href="javascript:;"><img class="logo" src="images/logo.png" /></a>
             </div>
             <div class="app-content" data-no-scroll>
-                <ul class="app-list js-article-list">
-                </ul>
+                <div class="main">
+                </div>
+                <div class="footer" style="display:none;">
+                    CHINA PSC许可
+                </div>
             </div>
         </div>
         <script>
             window.MSA = {};
-            window.MSA.apiDomain = 'http://www.nbmsa.gov.cn';
+            window.MSA.debug = true;
+            if(window.MSA.debug){
+                window.MSA.apiDomain = 'http://www.nbmsa.gov.cn';
+            }else{
+                window.MSA.apiDomain = '';
+            }
         </script>
         <!--jsmerge:begin:lib.js-->
         <script src="bower_components/zeptojs/src/zepto.js"></script>
@@ -41,16 +50,15 @@
         <script src="script/model/sql.js"></script>
         <script src="script/base.js"></script>
         <script src="script/util/util.js"></script>
-        <script src="script/home.js"></script>
         <script src="script/detail.js"></script>
         <!--jsmerge:end:app.js-->
 
         <script type="text/javascript">
-            try {
-                App.restore();
-            } catch (err) {
-                App.load('home');
-            }
+            App.load('detail', {
+                article: {
+                    id: Util.getURLParam('id')
+                }
+            });
         </script>
     </body>
 </html>
