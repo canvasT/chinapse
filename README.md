@@ -1,7 +1,7 @@
 chinapsc
 ========
 
-china pss 新闻阅读页
+china psc 新闻阅读页
 
 
 ##部署方法
