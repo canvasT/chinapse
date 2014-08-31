@@ -9,4 +9,4 @@ china psc 新闻阅读页
 
 ##访问方法
 1. http://www.nbmsa.gov.cn/index.html?categoryId=2(列表页)
-1. http://www.nbmsa.gov.cn/index.html?categoryId=36535(详情页)
+1. http://www.nbmsa.gov.cn/index.html?id=36535(详情页)
