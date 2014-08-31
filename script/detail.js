@@ -29,6 +29,7 @@ window.MSA.Detail = MSA.Class({
     loadDetail: function(){
     	var that = this;
         sql.getDetailById(this.article.id).done(function(_res){
+            window.document.title = _res['title'];
             var html = '<div class="article-title">' + _res['title'] + '</div>';
             html += '<div class="article-date">' + _res['start_publication'] + '</div>';
 

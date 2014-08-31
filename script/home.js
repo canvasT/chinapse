@@ -108,6 +108,7 @@
             that.categoryId = categoryId;
             sql.getCategory(categoryId).done(function(_res){
                 that.$title.text(_res.title);
+                window.document.title = _res.title;
             });
         }
 
