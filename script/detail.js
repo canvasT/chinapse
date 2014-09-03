@@ -31,7 +31,7 @@ window.MSA.Detail = MSA.Class({
         sql.getDetailById(this.article.id).done(function(_res){
             window.document.title = _res['title'];
             var html = '<div class="article-title">' + _res['title'] + '</div>';
-            html += '<div class="article-date">' + _res['start_publication'] + '</div>';
+            html += '<div class="article-date">' + _res['start_publication'] + ' ' + _res['source'] + '</div>';
 
             $.each(_res['pics'], function(i, o){
                 html += '<div class="article-pic"><img class="article-pic" src="' + window.MSA.apiDomain + o + '" /></div>';
@@ -42,7 +42,7 @@ window.MSA.Detail = MSA.Class({
             that.$footer.show();
 
             that.$btnBack.html(_res['category']['title']);
-            that.$btnBack.attr('href', '/index.html?categoryId=' + _res['category']['id']);
+            that.$btnBack.attr('href', './index.html?categoryId=' + _res['category']['id']);
         });
     }
 });

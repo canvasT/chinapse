@@ -34,7 +34,7 @@
                 e.isPropagationStopped()
                 $item = $(this);
 
-                window.location.href = '/detail.html?id=' + Number($item.attr('data-id'));
+                window.location.href = './detail.html?id=' + Number($item.attr('data-id'));
             });
             
         },
