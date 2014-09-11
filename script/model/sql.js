@@ -18,7 +18,6 @@
         $.ajax({
             url: DOCUMENTS_URL + _param.cat + '/',
             data: data,
-            dataType: 'jsonp',
             success: function(_res){
                 if(_callback){
                     _callback(_res);
@@ -32,7 +31,6 @@
     function getHTMLById(_id, _callback){
         $.ajax({
             url: DOCUMENT_URL + _id + '/',
-            dataType: 'jsonp',
             success: function(_res){
                 if(_callback){
                     _callback(_res);
@@ -74,7 +72,6 @@
         
         $.ajax({
             url: CATEGORY_URL + _id + '/',
-            dataType: 'jsonp',
             success: function(_result){
                 _callback && _callback(_result);
             },
